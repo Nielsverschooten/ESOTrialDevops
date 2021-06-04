@@ -1,0 +1,17 @@
+<div class="columns" style="height: 100%; margin-top: 10%;">
+    <div class="column"></div>
+    <div class="column is-one-quarter">
+        <input type="email" style="margin-bottom: 5px;"class="input" *ngIf="!(user | async)?.uid" placeholder="email" [(ngModel)]="email" >
+        <input type="password" style="margin-bottom: 5px;" class="input"  *ngIf="!(user | async)?.uid" placeholder="password" [(ngModel)]="password" >
+        
+        <div style="text-align: center;">
+            <button  type="button" class="button is-primary" style="width: 40%;" *ngIf="!(user | async)?.uid" (click)='login()'>Log in</button>
+            <button  type="button" class="button is-danger" style="width: 40%;" *ngIf="(user | async)?.uid" (click)='logout()'>Log out</button>
+        </div>
+        <p>test email: test@ap.be</p>
+        <p>test ww: test123</p>
+    </div>
+    <div class="column"></div>
+    
+</div>
+

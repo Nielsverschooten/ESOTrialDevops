@@ -1,0 +1,79 @@
+<div >
+    <table class="table">
+        <thead>
+            <th>
+                <div class="select">
+                    <select [(ngModel)]="player"  (ngModelChange)="onGetItemsForPlayer()">
+                        <option *ngFor="let p of players" [ngValue]="p">{{p.name}}</option>
+                    </select>
+                </div>
+            </th>
+            <th></th>
+        </thead>
+        <tbody>
+            <ng-container *ngIf="player">
+                <tr>
+                    <td>
+                        <p>character:</p>
+                    </td>
+                    <td>
+                        <p>{{player.characterName}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>level:</p>
+                    </td>
+                    <td>
+                        <p>{{player.level}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>champion points:</p>
+                    </td>
+                    <td>
+                        <p>{{player.cp}}</p>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+
+    </table>
+    
+    <table class="table" *ngIf="itemsForPlayer.length > 0">
+        <thead>
+            <th>{{player.name}}'s items</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let playeritem of itemsForPlayer">
+                <td>
+                    {{playeritem.item.name}}
+                </td>
+                <td>
+                    <button class="button is-danger" (click)="RemoveItemFromPlayer(playeritem.item.id)">Remove</button>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table" *ngIf="itemsNotForPlayer.length > 0">
+        <thead>
+            <th>All other items</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of itemsNotForPlayer">
+                <td>
+                    {{row.name}}
+                </td>
+                <td>
+                    <button class="button is-primary" (click)="AddItemToPlayer(row.id)">Add</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

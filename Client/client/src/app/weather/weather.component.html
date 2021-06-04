@@ -1,0 +1,70 @@
+<div style="margin-left: 100px;">
+    <h1 class="title is-4">Weather</h1>
+    <p style="width: 70%;">Display the weather in your current area by filling out the field below.</p>
+    <input type="text" class="input" placeholder="location" [(ngModel)]="location" style="width: 50%; margin-top: 15px;">
+    <br>
+    <button class="button" (click)="getCurrentWeather()" style="width: 25%; margin-top: 10px;">get</button>
+        <table class="table" *ngIf="weather">
+            <thead>
+               
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        location:
+                    </td>
+                    <td>
+                        {{weather.location.name}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        country:
+                    </td>
+                    <td>
+                        {{weather.location.country}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        temperature:
+                    </td>
+                    <td>
+                        {{weather.current.temperature}}°C
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        description:
+                    </td>
+                    <td>
+                        <p *ngFor="let d of weather.current.weather_descriptions">{{d}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        wind direction:
+                    </td>
+                    <td>
+                        {{weather.current.wind_dir}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        wind speed:
+                    </td>
+                    <td>
+                        {{weather.current.wind_speed}} km/h
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        humidity:
+                    </td>
+                    <td>
+                        {{weather.current.humidity}}%
+                    </td>
+                </tr>
+            </tbody>
+        </table>  
+</div>

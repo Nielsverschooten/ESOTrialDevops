@@ -1,0 +1,359 @@
+<div style="text-align: center;align-content: center;">
+    <button class="button" [ngClass]="{'is-primary' : !shownitems}"
+        (click)="shownitems = !shownitems;enableEditDelete=0; enableEditIndex=null;onGetItems()">armors</button>
+    <button class="button" [ngClass]="{'is-primary' : shownitems}"
+        (click)="shownitems = !shownitems;enableEditDelete=0; enableEditIndex=null;onGetItems()">weapons</button>
+    <ng-container *ngIf="!shownitems">
+        <table class="table" style="margin-left:auto; margin-right:auto;">
+            <thead>
+                <th *ngFor="let column of armorHeaders">
+                    {{column}}
+                </th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of armors;index as i;">
+                    <td>
+                        {{row.id}}
+                    </td>
+                    <ng-container *ngIf="enableEditDelete == 0 || enableEditDelete == 2 || enableEditIndex != i">
+                        <td>
+                            {{row.name}}
+                        </td>
+                        <td>
+                            {{row.value}}
+                        </td>
+                        <td>
+                            {{row.trait.name}}
+                        </td>
+                        <td>
+                            {{row.rarity.name}}
+                        </td>
+                        <td>
+                            {{row.set.name}}
+                        </td>
+                        <td>
+                            {{row.enchantment.name}}
+                        </td>
+                        <td>
+                            {{row.armortype}}
+                        </td>
+                        <td>
+                            {{row.armorRating}}
+                        </td>
+
+                        <td>
+                            {{row.durability}}
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="enableEditDelete == 1 && enableEditIndex == i">
+                        <td>
+                            <input [(ngModel)]="row.name" class="input" type="text" value="{{row.name}}">
+                        </td>
+                        <td>
+                            <input [(ngModel)]="row.value" class="input" min="0" type="number" value="{{row.value}}">
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.traitid">
+                                    <option *ngFor="let t of traits" [value]="t.id">{{t.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.rarityid">
+                                    <option *ngFor="let r of rarities" [value]="r.id">{{r.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.setid">
+                                    <option *ngFor="let s of sets" [value]="s.id">{{s.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.enchantmentid">
+                                    <option *ngFor="let e of enchantments" [value]="e.id">{{e.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.armortype">
+                                    <option value="Light">Light</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Heavy">Heavy</option>
+
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="row.armorRating" class="input" type="number" min="0"
+                                value="{{row.armorRating}}">
+                        </td>
+                        <td>
+                            <input [(ngModel)]="row.durability" class="input" type="number" min="0"
+                                value="{{row.durability}}">
+                        </td>
+
+                    </ng-container>
+                    <td>
+                        <button *ngIf=" enableEditIndex != i" class="button is-primary"
+                            (click)="enableEditMethod(e, i)">Edit</button>
+                        <button *ngIf="enableEditDelete == 1 && enableEditIndex == i " class="button is-primary"
+                            (click)="onPutArmor(row.id,row.name,row.value,row.traitid,row.rarityid,row.setid,row.enchantmentid,row.durability,row.armorRating,row.armortype)">Confirm</button>
+                        <button *ngIf="enableEditDelete == 2 && enableEditIndex == i" class="button is-primary"
+                            (click)="onDeleteItem(row.id)">Confirm</button>
+
+
+                    </td>
+                    <td>
+                        <button *ngIf="enableEditIndex != i " class="button is-danger"
+                            (click)="enableDeleteMethod(e, i)">Delete</button>
+                        <button *ngIf="enableEditDelete == 1 && enableEditIndex == i"
+                            (click)="enableEditDelete=0; enableEditIndex=null" class="button is-danger"
+                            ng-click="cancel()">Cancel</button>
+                        <button *ngIf="enableEditDelete == 2 && enableEditIndex == i"
+                            (click)="enableEditDelete=0; enableEditIndex=null" class="button is-danger"
+                            ng-click="cancel()">Cancel</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input [(ngModel)]="addArmor.name" type="text" placeholder="name" class="input">
+                    </td>
+                    <td>
+                        <input [(ngModel)]="addArmor.value" type="number" placeholder="value" class="input">
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addArmor.traitid">
+                                <option hidden value="" [disabled]="true">trait</option>
+                                <option *ngFor="let t of traits" [value]="t.id">{{t.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addArmor.rarityid">
+                                <option hidden value="" [disabled]="true">rarity</option>
+                                <option *ngFor="let r of rarities" [value]="r.id">{{r.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addArmor.setid">
+                                <option hidden value="" [disabled]="true">set</option>
+                                <option *ngFor="let s of sets" [value]="s.id">{{s.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addArmor.enchantmentid">
+                                <option hidden value="" [disabled]="true">enchantment</option>
+                                <option *ngFor="let e of enchantments" [value]="e.id">{{e.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addArmor.armortype">
+                                <option hidden value="" [disabled]="true">armor type</option>
+                                <option value="Light">Light</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Heavy">Heavy</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <input [(ngModel)]="addArmor.armorRating" class="input" min="0" type="number"
+                            placeholder="armor rating">
+                    </td>
+                    <td>
+                        <input [(ngModel)]="addArmor.durability" class="input" min="0" type="number"
+                            placeholder="durability">
+                    </td>
+                    <td>
+                        <button class="button is-primary"
+                            [disabled]="addArmor.name == null || addArmor.name ===''|| addArmor.value == null || addArmor.value ==='' || addArmor.traitid == null || addArmor.rarityid == null||addArmor.setid == null ||addArmor.enchantmentid == null || addArmor.armorRating == null|| addArmor.armortype ===''||addArmor.armortype === '' || addArmor.durability == null"
+                            (click)="onPostArmor(addArmor.name,addArmor.value,addArmor.traitid,addArmor.rarityid,addArmor.setid,addArmor.enchantmentid,addArmor.durability,addArmor.armorRating,addArmor.armortype)">Create</button>
+                    </td>
+
+
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+    <ng-container *ngIf="shownitems">
+        <table class="table" style="margin-left:auto; margin-right:auto;">
+            <thead>
+                <th *ngFor="let column of weaponHeaders">
+                    {{column}}
+                </th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of weapons;index as i;">
+                    <td>
+                        {{row.id}}
+                    </td>
+                    <ng-container *ngIf="enableEditDelete == 0 || enableEditDelete == 2 || enableEditIndex != i">
+                        <td>
+                            {{row.name}}
+                        </td>
+                        <td>
+                            {{row.value}}
+                        </td>
+                        <td>
+                            {{row.trait.name}}
+                        </td>
+                        <td>
+                            {{row.rarity.name}}
+                        </td>
+                        <td>
+                            {{row.set.name}}
+                        </td>
+                        <td>
+                            {{row.enchantment.name}}
+                        </td>
+                        <td>
+                            {{row.damage}}
+                        </td>
+                        <td>
+                            {{row.charge}}
+                        </td>
+
+
+                    </ng-container>
+                    <ng-container *ngIf="enableEditDelete == 1 && enableEditIndex == i">
+                        <td>
+                            <input [(ngModel)]="row.name" class="input" type="text" value="{{row.name}}">
+                        </td>
+                        <td>
+                            <input [(ngModel)]="row.value" class="input" min="0" type="number" value="{{row.value}}">
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.traitid">
+                                    <option *ngFor="let t of traits" [value]="t.id">{{t.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.rarityid">
+                                    <option *ngFor="let r of rarities" [value]="r.id">{{r.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.setid">
+                                    <option *ngFor="let s of sets" [value]="s.id">{{s.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select [(ngModel)]="row.enchantmentid">
+                                    <option *ngFor="let e of enchantments" [value]="e.id">{{e.name}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <input [(ngModel)]="row.damage" class="input" min="0" type="number" value="{{row.damage}}">
+                        </td>
+                        <td>
+                            <input [(ngModel)]="row.charge" class="input" min="0" type="number" value="{{row.charge}}">
+                        </td>
+
+                    </ng-container>
+                    <td>
+                        <button *ngIf=" enableEditIndex != i" class="button is-primary"
+                            (click)="enableEditMethod(e, i)">Edit</button>
+                        <button *ngIf="enableEditDelete == 1 && enableEditIndex == i " class="button is-primary"
+                            (click)="onPutWeapon(row.id,row.name,row.value,row.traitid,row.rarityid,row.setid,row.enchantmentid,row.damage,row.charge)">Confirm</button>
+                        <button *ngIf="enableEditDelete == 2 && enableEditIndex == i" class="button is-primary"
+                            (click)="onDeleteItem(row.id)">Confirm</button>
+
+
+                    </td>
+                    <td>
+                        <button *ngIf="enableEditIndex != i " class="button is-danger"
+                            (click)="enableDeleteMethod(e, i)">Delete</button>
+                        <button *ngIf="enableEditDelete == 1 && enableEditIndex == i"
+                            (click)="enableEditDelete=0; enableEditIndex=null" class="button is-danger"
+                            ng-click="cancel()">Cancel</button>
+                        <button *ngIf="enableEditDelete == 2 && enableEditIndex == i"
+                            (click)="enableEditDelete=0; enableEditIndex=null" class="button is-danger"
+                            ng-click="cancel()">Cancel</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input [(ngModel)]="addWeapon.name" type="text" placeholder="name" class="input">
+                    </td>
+                    <td>
+                        <input [(ngModel)]="addWeapon.value" min="0" type="number" placeholder="value" class="input">
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addWeapon.traitid">
+                                <option hidden value="" [disabled]="true">trait</option>
+                                <option *ngFor="let t of traits" [value]="t.id">{{t.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addWeapon.rarityid">
+                                <option hidden value="" [disabled]="true">rarity</option>
+                                <option *ngFor="let r of rarities" [value]="r.id">{{r.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addWeapon.setid">
+                                <option hidden value="" [disabled]="true">set</option>
+                                <option *ngFor="let s of sets" [value]="s.id">{{s.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="select">
+                            <select [(ngModel)]="addWeapon.enchantmentid">
+                                <option hidden value="" [disabled]="true">enchantment</option>
+                                <option *ngFor="let e of enchantments" [value]="e.id">{{e.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+
+                    <td>
+                        <input [(ngModel)]="addWeapon.damage" class="input" min="0" type="number" placeholder="damage">
+                    </td>
+                    <td>
+                        <input [(ngModel)]="addWeapon.charge" class="input" min="0" type="number" placeholder="charge">
+                    </td>
+                    <td>
+                        <button class="button is-primary"
+                            [disabled]="addWeapon.name == null || addWeapon.name ===''|| addWeapon.value == null || addWeapon.value ==='' || addWeapon.traitid == null || addWeapon.rarityid == null||addWeapon.setid == null ||addWeapon.enchantmentid == null || addWeapon.damage == null|| addWeapon.charge == null"
+                            (click)="onPostWeapon(addWeapon.name,addWeapon.value,addWeapon.traitid,addWeapon.rarityid,addWeapon.setid,addWeapon.enchantmentid,addWeapon.damage,addWeapon.charge)">Create</button>
+                    </td>
+
+
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+</div>

@@ -68,6 +68,18 @@
       name: dotnet-sdk-5.0
       state: present
     become: true
+  
+  - name: install ASP.NET 5 runtime
+    apt:
+      name: aspnetcore-runtime-5.0
+      state: present
+    become: true
+  
+  - name: install .NET core 5 runtime
+    apt:
+      name: dotnet-runtime-5.0
+      state: present
+    become: true
 
 
 

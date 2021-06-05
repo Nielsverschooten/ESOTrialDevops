@@ -1,23 +1,21 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build-env
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
 WORKDIR /app
-COPY *.csproj ./
-RUN dotnet restore
-COPY . ./
-RUN dotnet publish -c Release -o out
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+WORKDIR /src
+COPY ["ESO-trial-API/ESO-trial-API.csproj", "ESO-trial-API/"]
+RUN dotnet restore "ESO-trial-API/ESO-trial-API.csproj"
+COPY . .
+WORKDIR "/src/ESO-trial-API"
+RUN dotnet build "ESO-trial-API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "ESO-trial-API.csproj" -c Release -o /app/publish
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build-env /app/out ./
-EXPOSE 8081
-ENV ASPNETCORE_URLS=http://*:8081
-RUN apk add icu-libs
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ESO-trial-API.dll"]
-
-
-
-
-
-
-
-
-

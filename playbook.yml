@@ -80,7 +80,16 @@
       name: dotnet-runtime-5.0
       state: present
     become: true
-
+#start up project
+  - name: dotnet restore
+    command:
+      cmd: dotnet restore /project/ESO-trial-API/ESO-trial-API/ESO-trial-API.csproj
+    become: true
+  
+  - name: dotnet restore
+  command:
+    cmd: dotnet build /project/ESO-trial-API/ESO-trial-API/ESO-trial-API.csproj
+  become: true
 
 
 

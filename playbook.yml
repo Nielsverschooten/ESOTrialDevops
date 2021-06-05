@@ -86,7 +86,7 @@
       cmd: dotnet restore /project/ESO-trial-API/ESO-trial-API/ESO-trial-API.csproj
     become: true
   
-  - name: dotnet restore
+  - name: dotnet build
     command:
       cmd: dotnet build /project/ESO-trial-API/ESO-trial-API/ESO-trial-API.csproj
     become: true

@@ -37,7 +37,37 @@
       force: true
 
   #dotnet package install
+  - name: wget dotnet package
+    command:
+      cmd: wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
   
+  - name: dpkg pulled dotnet package
+    command:
+      cmd: dpkg -i packages-microsoft-prod.deb
+
+  - name: add add-apt-repository
+    apt:
+      name: software-properties-common
+      state: present
+    become: true
+
+  - name: add universe repo
+    command:
+      cmd: add-apt-repository universe
+  - name: Install apt-transport-https
+    apt:
+      name: apt-transport-https
+      state: present
+    become: true
+  - name: Update packages
+    command:
+      cmd: apt-get update
+    
+  - name: install net core 5 sdk
+    apt:
+      name: dotnet-sdk-5.0
+      state: present
+    become: true
 
 
 

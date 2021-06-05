@@ -1,0 +1,45 @@
+- hosts: all
+  remote_user: root
+  become_method: sudo
+  become_user: root
+  tasks:
+  #Update & upgrade
+  - name: apt-get update & upgrade
+    apt:
+      upgrade: yes
+      update_cache: yes
+    become: true
+  #git install
+  - name: install git
+    apt:
+      name: git
+      state: present
+  #download repo
+  - name: check if project folder exists
+    stat:
+      path: /project
+    register: stat_project
+  
+  - name: delete if project folder exists
+    command:
+      cmd: rm -r /project
+    become:  true
+    when: stat_project.stat.exists
+
+  - name: create /project folder
+    command:
+      cmd: mkdir /project
+
+  - name: download repo
+    git:
+      repo: https://github.com/nielsxformer02/ESOTrialDevops.git
+      dest: /project
+      force: true
+
+  #dotnet package install
+  
+
+
+
+
+    

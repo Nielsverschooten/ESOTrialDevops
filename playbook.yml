@@ -19,6 +19,14 @@
     apt:
       name: xinetd
       state: present
+  #checkmk agent
+  - name: wget checkmk agent
+    command:
+      cmd: wget http://172.18.0.5:5000/cmk/check_mk/agents/check-mk-agent_2.0.0p5-1_all.deb
+  #dpkg checkmk agent
+  - name: dpkg checkmk agent
+    command:
+      cmd: dpkg -i check-mk-agent_2.0.0p5-1_all.deb
   #download repo
   - name: check if project folder exists
     stat:
